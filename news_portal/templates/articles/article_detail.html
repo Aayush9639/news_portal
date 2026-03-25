@@ -1,0 +1,30 @@
+<h1>{{ article.title }}</h1>
+
+<p><b>By:</b> {{ article.journalist.username }}</p>
+<p><b>Category:</b> {{ article.category }}</p>
+
+<hr>
+
+<p>{{ article.content }}</p>
+
+<hr>
+
+<h3>Comments</h3>
+
+{% for comment in comments %}
+    <p><b>{{ comment.user.username }}</b>: {{ comment.content }}</p>
+{% empty %}
+    <p>No comments yet</p>
+{% endfor %}
+
+<hr>
+
+<h3>Add Comment</h3>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Comment</button>
+</form>
+
+<a href="{% url 'article_list' %}">Back</a>

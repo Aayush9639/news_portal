@@ -1,0 +1,21 @@
+<h1>Latest News</h1>
+
+{% for article in articles %}
+    <div style="border:1px solid black; margin:10px; padding:10px;">
+
+        <h2>{{ article.title }}</h2>
+
+        <p>{{ article.content|truncatewords:20 }}</p>
+
+        <p><b>Category:</b> {{ article.category }}</p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'article_detail' article.id %}">Read More</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login to Read</a>
+        {% endif %}
+
+    </div>
+{% empty %}
+    <p>No articles available</p>
+{% endfor %}

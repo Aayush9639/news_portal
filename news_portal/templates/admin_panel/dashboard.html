@@ -1,0 +1,12 @@
+<h1>Admin Dashboard</h1>
+
+<a href="{% url 'logout' %}">Logout</a>
+
+<p>Total Users: {{ total_users }}</p>
+<p>Total Articles: {{ total_articles }}</p>
+<p>Pending Articles: {{ pending_articles }}</p>
+<p>Approved Articles: {{ approved_articles }}</p>
+<p>Total Ads: {{ total_ads }}</p>
+
+<a href="{% url 'review_articles' %}">Review Articles</a>
+<a href="{% url 'manage_users' %}">Manage Users</a>

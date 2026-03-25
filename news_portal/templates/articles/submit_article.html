@@ -1,0 +1,9 @@
+<h2>Submit Article</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<a href="{% url 'journalist_dashboard' %}">Back to Dashboard</a>

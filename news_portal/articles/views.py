@@ -1,0 +1,106 @@
+from django.shortcuts import render, redirect
+from .forms import ArticleForm, CommentForm
+from .models import Article, Comment
+from django.contrib.auth.decorators import login_required
+from users.decorators import role_required
+from django.shortcuts import get_object_or_404
+
+@login_required
+@role_required(['journalist'])
+def journalist_dashboard(request):
+    articles = Article.objects.filter(journalist=request.user)
+
+    return render(request, 'articles/journalist_dashboard.html', {
+        'articles': articles
+    })
+
+@login_required
+@role_required(['reader'])
+def reader_dashboard(request):
+    return render(request, 'articles/reader_dashboard.html')
+
+@login_required
+@role_required(['journalist'])
+def submit_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+
+        if form.is_valid():
+            article = form.save(commit=False)
+
+            # IMPORTANT
+            article.journalist = request.user
+            article.status = 'pending'
+
+            article.save()
+
+            return redirect('journalist_dashboard')
+    else:
+        form = ArticleForm()
+
+    return render(request, 'articles/submit_article.html', {'form': form})
+
+@login_required
+@role_required(['journalist'])
+def edit_article(request, id):
+    article = get_object_or_404(Article, id=id, journalist=request.user)
+
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('journalist_dashboard')
+    else:
+        form = ArticleForm(instance=article)
+
+    return render(request, 'articles/edit_article.html', {'form': form})
+
+@login_required
+@role_required(['journalist'])
+def delete_article(request, id):
+    article = get_object_or_404(Article, id=id, journalist=request.user)
+
+    if request.method == 'POST':
+        article.delete()
+        return redirect('journalist_dashboard')
+
+    return render(request, 'articles/delete_article.html', {'article': article})
+
+def article_list(request):
+    articles = Article.objects.filter(status='approved').order_by('-created_at')
+
+    return render(request, 'articles/article_list.html', {
+        'articles': articles
+    })
+
+@login_required
+def article_detail(request, id):
+    article = get_object_or_404(Article, id=id)
+
+    # 🔒 ACCESS CONTROL
+    if article.status != 'approved':
+        if request.user.role == 'admin':
+            pass  # admin can see all
+        elif article.journalist == request.user:
+            pass  # journalist can see own article
+        else:
+            return redirect('article_list')  # block others
+
+    comments = Comment.objects.filter(article=article)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.article = article
+            comment.save()
+            return redirect('article_detail', id=id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'articles/article_detail.html', {
+        'article': article,
+        'form': form,
+        'comments': comments
+    })

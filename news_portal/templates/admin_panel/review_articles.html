@@ -1,0 +1,29 @@
+<h2>Pending Articles</h2>
+
+{% for article in articles %}
+    <div style="border:1px solid black; padding:10px; margin:10px;">
+
+        <h3>{{ article.title }}</h3>
+
+        <p><b>By:</b> {{ article.journalist.username }}</p>
+
+        <p><b>Category:</b> {{ article.category }}</p>
+
+        <p><b>Content:</b></p>
+        <p>{{ article.content }}</p>
+
+        <p><b>Status:</b> {{ article.status }}</p>
+
+        <a href="{% url 'approve_article' article.id %}">Approve</a>
+        |
+        <a href="{% url 'reject_article' article.id %}">Reject</a>
+        |
+        <a href="{% url 'edit_article_admin' article.id %}">Edit</a>
+        |
+        <a href="{% url 'delete_article_admin' article.id %}" onclick="return confirm('Are you sure you want to delete this article?')">Delete</a>
+
+    </div>
+
+{% empty %}
+    <p>No pending articles</p>
+{% endfor %}
