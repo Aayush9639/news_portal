@@ -11,4 +11,8 @@ urlpatterns = [
     path('delete/<int:id>/', delete_article_admin, name='delete_article_admin'),
     path('edit_user/<int:id>/', edit_user, name='edit_user'),
     path('delete_user/<int:id>/', delete_user, name='delete_user'),
+    path('ads/', review_ads, name='review_ads'),
+    path('approve_ad/<int:id>/', approve_ad, name='approve_ad'),
+    path('reject_ad/<int:id>/', reject_ad, name='reject_ad'),
+
 ]

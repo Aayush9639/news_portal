@@ -1,30 +1,79 @@
-<h1>{{ article.title }}</h1>
+{% extends 'base.html' %}
 
-<p><b>By:</b> {{ article.journalist.username }}</p>
-<p><b>Category:</b> {{ article.category }}</p>
+{% block content %}
 
-<hr>
+<div class="container mt-4">
 
-<p>{{ article.content }}</p>
+    <!-- ARTICLE CARD -->
+    <div class="card shadow-sm p-4 mb-4 article-card">
 
-<hr>
+        <h2 class="mb-3">{{ article.title }}</h2>
 
-<h3>Comments</h3>
+        <div class="mb-2 text-muted">
+            <span>✍️ {{ article.journalist.username }}</span> |
+            <span>📂 {{ article.category }}</span>
+        </div>
 
-{% for comment in comments %}
-    <p><b>{{ comment.user.username }}</b>: {{ comment.content }}</p>
-{% empty %}
-    <p>No comments yet</p>
-{% endfor %}
+        <hr>
 
-<hr>
+        <p class="article-content">
+            {{ article.content }}
+        </p>
 
-<h3>Add Comment</h3>
+    </div>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Comment</button>
-</form>
+    <!-- COMMENTS SECTION -->
+    <div class="card shadow-sm p-4 mb-4">
 
-<a href="{% url 'article_list' %}">Back</a>
+        <h4 class="mb-3">💬 Comments</h4>
+
+        {% for comment in comments %}
+            <div class="comment-box mb-3">
+                <strong>{{ comment.user.username }}</strong>
+                <p class="mb-1">{{ comment.content }}</p>
+            </div>
+        {% empty %}
+            <p class="text-muted">No comments yet</p>
+        {% endfor %}
+
+    </div>
+
+    <!-- ADD COMMENT -->
+    <div class="card shadow-sm p-4 comment-card">
+
+        <h4 class="mb-3">➕ Add Comment</h4>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3 positive-relative">
+                <label class="form-label">Your Comment</label>
+                <textarea name="content" 
+                    class="form-control comment-textarea" 
+                    placeholder="Write your thoughts here..."
+                    rows="5">
+                </textarea>
+
+                <!-- character count -->
+                <small class="text-muted character-count">
+                    0/500 characters
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Post Comment
+            </button>
+        </form>
+
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="mt-3">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            ← Back
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

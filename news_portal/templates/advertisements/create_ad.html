@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-md-8">
+
+            <!-- FORM CARD -->
+            <div class="card shadow-sm p-4 form-card">
+
+                <h3 class="text-center mb-2">📢 Create Advertisement</h3>
+                <p class="text-center text-muted mb-4">
+                    Promote your product or service
+                </p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- TITLE -->
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        {{ form.title }}
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        {{ form.content }}
+                    </div>
+
+                    <!-- IMAGE -->
+                    <div class="mb-3">
+                        <label class="form-label">Upload Image</label>
+                        {{ form.image }}
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="d-flex justify-content-between mt-4">
+
+                        <a href="{% url 'advertiser_dashboard' %}" 
+                           class="btn btn-outline-secondary">
+                            ← Back
+                        </a>
+
+                        <button type="submit" class="btn btn-success">
+                            🚀 Submit Ad
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

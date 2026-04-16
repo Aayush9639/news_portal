@@ -6,30 +6,17 @@
 
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>✍️ Journalist Dashboard</h2>
-            <p class="text-muted mb-0">Welcome {{ user.first_name }}</p>
-        </div>
+        <h2>📢 Advertiser Dashboard</h2>
 
         <div>
-            <a href="{% url 'submit_article' %}" class="btn btn-success me-2">
-                ➕ Submit Article
-            </a>
-            <a href="{% url 'article_list' %}" class="btn btn-primary">
-                📰 View News
+            <a href="{% url 'create_ad' %}" class="btn btn-success me-2">
+                ➕ Create Ad
             </a>
         </div>
     </div>
 
-    <!-- ARTICLES TABLE -->
+    <!-- TABLE CARD -->
     <div class="card shadow-sm p-3">
-
-        <h4 class="mb-3">📄 Your Articles</h4>
-
-        <div class="stat-card">
-            <p class="stat-title">Total Articles</p>
-            <h4 class="stat-value">{{ articles|length }}</h4>
-        </div>        
 
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -38,43 +25,39 @@
                     <tr>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Created</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for article in articles %}
+                    {% for ad in ads %}
                     <tr>
-                        <td>{{ article.title }}</td>
+                        <td>{{ ad.title }}</td>
 
                         <!-- STATUS BADGE -->
                         <td>
-                            <span class="badge status-{{ article.status }}">
-                                {{ article.status|title }}
+                            <span class="badge status-{{ ad.status }}">
+                                {{ ad.status|title }}
                             </span>
                         </td>
 
-                        <td>{{ article.created_at|date:"d M Y" }}</td>
-
-                        <!-- ACTIONS -->
+                        <!-- ACTION BUTTONS -->
                         <td class="text-center">
-                            <a href="{% url 'edit_article' article.id %}" 
+                            <a href="{% url 'edit_ad' id=ad.id %}" 
                                class="btn btn-edit btn-sm">
                                 ✏️ Edit
                             </a>
 
-                            <a href="{% url 'delete_article' article.id %}" 
+                            <a href="{% url 'delete_ad' id=ad.id %}" 
                                class="btn btn-delete btn-sm">
                                 🗑 Delete
                             </a>
                         </td>
                     </tr>
-
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center text-muted">
-                            No articles yet
+                        <td colspan="3" class="text-center text-muted">
+                            No ads created yet
                         </td>
                     </tr>
                     {% endfor %}

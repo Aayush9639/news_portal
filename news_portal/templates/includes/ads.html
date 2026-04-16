@@ -1,0 +1,27 @@
+<div class="ads-section">
+    <h5 class="mb-3 fw-semibold">📢 Advertisements</h5>
+
+    {% for ad in ads|slice:":3" %}
+        <div class="card ad-card mb-3 border-0 shadow-sm">
+
+            {% if ad.image %}
+                <div class="ad-img-wrapper"></div>
+                    <img src="{{ ad.image.url }}" 
+                        class="card-img-top ad-img">
+                </div>
+            {% endif %}
+
+            <div class="card-body p-2">
+                <h6 class="card-title mb-1">{{ ad.title }}</h6>
+                <p class="card-text small text-muted">
+                    {{ ad.content|truncatewords:10 }}
+                </p>
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="alert alert-light text-center p-2">
+            No ads available
+        </div>
+    {% endfor %}
+</div>

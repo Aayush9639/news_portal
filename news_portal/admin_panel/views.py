@@ -4,7 +4,7 @@ from django import forms
 from articles.models import Article
 from articles.forms import ArticleForm
 from django.shortcuts import get_object_or_404
-#from advertisements.models import Advertisement
+from advertisements.models import Advertisement
 from .decorators import admin_required
 
 @admin_required
@@ -13,7 +13,7 @@ def admin_dashboard(request):
     total_articles = Article.objects.count()
     pending_articles = Article.objects.filter(status='pending').count()
     approved_articles = Article.objects.filter(status='approved').count()
-    total_ads = 0 #Advertisement.objects.count()
+    total_ads = Advertisement.objects.count()
 
     context = {
         'total_users': total_users,
@@ -102,3 +102,24 @@ def delete_user(request, id):
     
     user.delete()
     return redirect('manage_users')
+
+@admin_required
+def review_ads(request):
+    ads = Advertisement.objects.filter(status='pending')
+    return render(request, 'admin_panel/review_ads.html', {'ads': ads})
+
+
+@admin_required
+def approve_ad(request, id):
+    ad = Advertisement.objects.get(id=id)
+    ad.status = 'approved'
+    ad.save()
+    return redirect('review_ads')
+
+
+@admin_required
+def reject_ad(request, id):
+    ad = Advertisement.objects.get(id=id)
+    ad.status = 'rejected'
+    ad.save()
+    return redirect('review_ads')

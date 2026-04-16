@@ -1,12 +1,54 @@
-<h1>Admin Dashboard</h1>
+{% extends 'base.html' %}
 
-<a href="{% url 'logout' %}">Logout</a>
+{% block content %}
 
-<p>Total Users: {{ total_users }}</p>
-<p>Total Articles: {{ total_articles }}</p>
-<p>Pending Articles: {{ pending_articles }}</p>
-<p>Approved Articles: {{ approved_articles }}</p>
-<p>Total Ads: {{ total_ads }}</p>
+<div class="container">
 
-<a href="{% url 'review_articles' %}">Review Articles</a>
-<a href="{% url 'manage_users' %}">Manage Users</a>
+    <h2 class="mb-4">📊 Admin Dashboard</h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>Total Users</h5>
+                <h3>{{ total_users }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>Total Articles</h5>
+                <h3>{{ total_articles }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>Pending Articles</h5>
+                <h3 class="text-warning">{{ pending_articles }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>Approved Articles</h5>
+                <h3 class="text-success">{{ approved_articles }}</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>Total Ads</h5>
+                <h3>{{ total_ads }}</h3>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

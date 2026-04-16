@@ -1,6 +1,79 @@
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height:80vh;">
+
+    <form method="POST" class="card p-4 shadow" style="width:400px;">
+        {% csrf_token %}
+
+        <h4 class="text-center mb-3">Register</h4>
+
+        <div class="mb-3">
+            <label>Username</label>
+            {{ form.username }}
+        </div>
+
+        <div class="mb-3">
+            <label>First Name</label>
+            {{ form.first_name }}
+        </div>
+
+        <div class="mb-3">
+            <label>Last Name</label>
+            {{ form.last_name }}
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            {{ form.email }}
+        </div>
+
+        <div class="mb-3">
+            <label>Phone</label>
+            {{ form.phone_number }}
+        </div>
+
+        <div class="mb-3">
+            <label>Role</label>
+            {{ form.role }}
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+            {{ form.password1 }}
+        </div>
+
+        <div class="mb-3">
+            <label>Confirm Password</label>
+            {{ form.password2 }}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+
+        <p class="text-center mt-3">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+        
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    </form>
+
+</div>
+
+{% endblock %}

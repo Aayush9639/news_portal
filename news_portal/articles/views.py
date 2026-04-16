@@ -17,7 +17,15 @@ def journalist_dashboard(request):
 @login_required
 @role_required(['reader'])
 def reader_dashboard(request):
-    return render(request, 'articles/reader_dashboard.html')
+    articles = Article.objects.filter(status='approved').order_by('-created_at')[:5]
+
+    context = {
+        'articles': articles,
+        'total_articles': Article.objects.filter(status='approved').count(),
+        'total_categories': Article.objects.filter(status='approved').values('category').distinct().count()
+
+    }
+    return render(request, 'articles/reader_dashboard.html', context)
 
 @login_required
 @role_required(['journalist'])
@@ -86,8 +94,8 @@ def article_detail(request, id):
         else:
             return redirect('article_list')  # block others
 
-    comments = Comment.objects.filter(article=article)
-
+    comments = Comment.objects.filter(article=article).order_by('-created_at')
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():

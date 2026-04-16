@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>📢 Pending Advertisements</h2>
+
+{% for ad in ads %}
+    <div class="card mb-3 shadow-sm p-3">
+
+        <h3>{{ ad.title }}</h3>
+
+        <p><strong>By:</strong> {{ ad.advertiser.username }}</p>
+
+        <p>{{ ad.content }}</p>
+
+        {% if ad.image %}
+            <img src="{{ ad.image.url }}" width="200" style="border:1px solid black">
+        {% endif %}
+
+        <br><br>
+
+        <a href="{% url 'approve_ad' ad.id %}" class="btn btn-sm btn-success">Approve</a> |
+        <a href="{% url 'reject_ad' ad.id %}" class="btn btn-sm btn-danger">Reject</a>
+
+    </div>
+{% empty %}
+    <p>No pending ads</p>
+{% endfor %}
+
+{% endblock %}
