@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        
+        <h2>Payment Error</h2>
+        <p class="error-message">{{ error }}</p>
+        
+        {% if plan %}
+        <div class="plan-info error-plan">
+            <h4>{{ plan.name }} - ₹{{ plan.price }}</h4>
+            <p>{{ plan.description }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="error-buttons">
+            {% if plan %}
+                <a href="{% url 'checkout' plan.id %}" class="btn-primary-custom">Try Again</a>
+            {% else %}
+                <a href="{% url 'subscription_plans' %}" class="btn-primary-custom">View Plans</a>
+            {% endif %}
+            <a href="{% url 'subscription_plans' %}" class="btn-secondary-custom">Back to Plans</a>
+        </div>
+        
+        <div class="error-help">
+            <h5>What went wrong?</h5>
+            <p>An error occurred while processing your payment. This might be due to:</p>
+            <ul>
+                <li>A temporary payment processor issue</li>
+                <li>Network connectivity problems</li>
+                <li>Invalid payment information</li>
+                <li>Card being declined by your bank</li>
+            </ul>
+            <p><strong>Please try again or contact support if the problem persists.</strong></p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

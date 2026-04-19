@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        
+        <h2>Payment Successful!</h2>
+        <p>Thank you for your subscription. A confirmation email has been sent to {{ user.email }}</p>
+        
+        <div class="plan-info">
+            <h4>Subscription Details</h4>
+            <p><strong>Plan:</strong> {{ plan.name }}</p>
+            <p><strong>Price:</strong> ₹{{ plan.price }}/month</p>
+            <p><strong>Status:</strong> <span class="status-active">Active</span></p>
+            <p><strong>Features:</strong></p>
+            <ul>
+                {% for feature in plan.features_list %}
+                    <li>✓ {{ feature }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="success-buttons">
+            <a href="{% url 'reader_dashboard' %}" class="btn-primary-custom">Go to Dashboard</a>
+            <a href="{% url 'subscription_plans' %}" class="btn-secondary-custom">View Other Plans</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

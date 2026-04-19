@@ -5,29 +5,25 @@
 <div class="container mt-4">
 
 {% if user.is_authenticated %}
-    <div class="alert alert-info">
-    Welcome {{ user.first_name }} ({{ user.role }})
+    <div class="alert alert-light py-2 px-3 mb-3">
+        👋 Welcome back, <strong>{{ user.first_name }}</strong>
     </div>
-    <a class="btn btn-danger mb-3" href="{% url 'logout' %}">Logout</a>
-{% else %}
-    <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
-    <a class="btn btn-success" href="{% url 'register' %}">Register</a>
 {% endif %}
 
 <hr>
 
-<h2 class="mb-3 text-primary">📰 Latest News</h2>
+<h2 class="mb-3 text-primary" style="font-size: 20px;">📰 Latest News</h2>
 
 {% for article in articles %}
-<div class="card mb-3">
+<div class="card mb-3 shadow-sm p-2">
     <div class="card-body">
 
         {% if user.is_authenticated %}
             <a href="{% url 'article_detail' article.id %}">
-                <h5 class="card-title">{{ article.title }}</h5>
+                <h5 class="card-title mb-1" style="font-size:15px;">{{ article.title }}</h5>
             </a>
         {% else %}
-            <h5 class="card-title">{{ article.title }}</h5>
+            <h5 class="card-title mb-1" style="font-size:15px;">{{ article.title }}</h5>
             <small>
                 <a href="{% url 'login' %}" class="text-danger">
                     Login to read full article
@@ -51,15 +47,15 @@
 
 <hr>
 
-<h2 class="mt-4 text-success">📢 Advertisements</h2>
+<h2 class="mt-4 text-success" style="font-size: 20px;">📢 Advertisements</h2>
 
 <div class="row">
 {% for ad in ads %}
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card p-3 mb-3">
 
             {% if ad.image %}
-                <img src="{{ ad.image.url }}" class="img-fluid mb-2" style="height:150px; object-fit:cover;">
+                <img src="{{ ad.image.url }}" class="img-fluid mb-2" style="height:130px; object-fit:cover;">
             {% endif %}
 
             <div class="card-body">

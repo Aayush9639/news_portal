@@ -38,7 +38,7 @@
 
     </div>
 
-    <div class="row mt-4">
+    <div class="row mt-4 g-4">
 
         <div class="col-md-3">
             <div class="card dashboard-card text-center shadow-sm">
@@ -47,6 +47,71 @@
             </div>
         </div>
 
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>💎 Active Subscriptions</h5>
+                <h3 class="text-info">{{ active_subscriptions }}</h3>
+                <small>of {{ total_subscriptions }} total</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>💰 Completed Payments</h5>
+                <h3 class="text-success">{{ total_revenue }}</h3>
+                <small>₹{{ completed_payments|floatformat:2 }}</small>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dashboard-card text-center shadow-sm">
+                <h5>📋 Subscription Plans</h5>
+                <h3>{{ subscription_plans|length }}</h3>
+                <a href="/admin/subscriptions/subscriptionplan/" class="btn btn-sm btn-primary mt-2">
+                    Manage Plans
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Links Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4 class="mb-3">🔧 Quick Management Links</h4>
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <a href="{% url 'review_articles' %}" class="btn btn-outline-primary w-100">
+                        📰 Articles
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'manage_users' %}" class="btn btn-outline-primary w-100">
+                        👥 Users
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'review_ads' %}" class="btn btn-outline-primary w-100">
+                        📢 Ads
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'manage_plans' %}" class="btn btn-outline-success w-100">
+                        💎 Plans
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'manage_subscriptions' %}" class="btn btn-outline-success w-100">
+                        👤 Subs
+                    </a>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'manage_payments' %}" class="btn btn-outline-success w-100">
+                        💳 Payments
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

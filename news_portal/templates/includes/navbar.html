@@ -1,19 +1,33 @@
-<nav class="navbar navbar-expand-lg navbar-custom px-3">
+<nav class="navbar navbar-custom">
+    <a class="navbar-brand" href="{% url 'home' %}">📰 MyNewsPortal</a>
 
-    <a class="navbar-brand" href="{% url 'home' %}">
-        📰 MyNewsPortal
-    </a>
+    <div class="navbar-search-container">
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'search_articles' %}" style="display: flex; gap: 0;">
+            <div class="search-input-wrapper">
+                <input type="text" name="q" class="search-input" placeholder="Search articles..." value="{{ request.GET.q|default:'' }}">
+                <button type="submit" class="search-btn">🔍</button>
+            </div>
+        </form>
 
-    <div class="ms-auto">
+        <!-- Category Filter -->
+        <form method="GET" action="{% url 'article_list' %}" style="display: flex; margin: 0; padding: 0;">
+            <select name="category" class="filter-dropdown" onchange="this.form.submit()">
+                <option value="">📂 All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if request.GET.category|add:"0" == category.id %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 
+    <div class="navbar-right">
         {% if user.is_authenticated %}
-            <span class="text-white me-3">Hi, {{ user.first_name }}</span>
+            <span class="text-white">Hi, {{ user.first_name }}</span>
             <a class="btn btn-light btn-sm" href="{% url 'logout' %}">Logout</a>
         {% else %}
             <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Login</a>
             <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Register</a>
         {% endif %}
-
     </div>
-
 </nav>

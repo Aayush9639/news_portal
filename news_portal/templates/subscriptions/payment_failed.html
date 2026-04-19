@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">✕</div>
+        
+        <h2>Payment Failed</h2>
+        <p class="error-message">{{ error }}</p>
+        
+        {% if plan %}
+        <div class="plan-info error-plan">
+            <h4>{{ plan.name }} - ₹{{ plan.price }}</h4>
+            <p>{{ plan.description }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="error-buttons">
+            {% if plan %}
+                <a href="{% url 'checkout' plan.id %}" class="btn-primary-custom">Try Again</a>
+            {% endif %}
+            <a href="{% url 'subscription_plans' %}" class="btn-secondary-custom">Back to Plans</a>
+        </div>
+        
+        <div class="error-help">
+            <h5>Having trouble?</h5>
+            <p>If you continue to experience payment issues:</p>
+            <ul>
+                <li>Check that your card details are correct</li>
+                <li>Ensure your card is not expired</li>
+                <li>Try a different payment method</li>
+                <li>Contact your bank if the problem persists</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

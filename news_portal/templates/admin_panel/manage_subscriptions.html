@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2>👥 Manage User Subscriptions</h2>
+        <p class="text-muted">View and monitor all user subscriptions</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Filter by Status:</strong></label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">🔍 Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Subscriptions Table -->
+    {% if subscriptions %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>👤 User</th>
+                        <th>📧 Email</th>
+                        <th>💎 Plan</th>
+                        <th>💰 Price</th>
+                        <th>📅 Subscribed</th>
+                        <th>📆 Expires</th>
+                        <th>🔐 Status</th>
+                        <th>✅ Payment</th>
+                        <th>⚙️ Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sub in subscriptions %}
+                        <tr>
+                            <td>
+                                <strong>{{ sub.user.get_full_name|default:sub.user.username }}</strong>
+                            </td>
+                            <td>
+                                <small>{{ sub.user.email }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ sub.plan.name }}</span>
+                            </td>
+                            <td>
+                                <strong>₹{{ sub.plan.price }}</strong>
+                            </td>
+                            <td>
+                                <small>{{ sub.subscribed_at|date:"M d, Y" }}</small>
+                            </td>
+                            <td>
+                                {% if sub.expires_at %}
+                                    <small>{{ sub.expires_at|date:"M d, Y" }}</small>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if sub.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if sub.payment_status == 'completed' %}
+                                    <span class="badge bg-success">✓ Completed</span>
+                                {% elif sub.payment_status == 'pending' %}
+                                    <span class="badge bg-warning">⏳ Pending</span>
+                                {% elif sub.payment_status == 'failed' %}
+                                    <span class="badge bg-danger">✗ Failed</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ sub.payment_status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <details class="dropdown">
+                                    <summary class="btn btn-sm btn-outline-secondary">⋮</summary>
+                                    <div class="dropdown-menu p-2">
+                                        {% if sub.stripe_customer_id %}
+                                            <small class="text-muted d-block mb-2">
+                                                <code>{{ sub.stripe_customer_id }}</code>
+                                            </small>
+                                        {% endif %}
+                                        <small class="text-muted">Last payment: 
+                                            {% if sub.last_payment_date %}
+                                                {{ sub.last_payment_date|date:"M d, Y" }}
+                                            {% else %}
+                                                Never
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </details>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-info mt-3">
+            <strong>📊 Total Subscriptions:</strong> {{ subscriptions.count }}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <h5>📭 No Subscriptions Found</h5>
+            <p>No user subscriptions match the selected filters.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    details summary {
+        cursor: pointer;
+        list-style: none;
+    }
+    details summary::-webkit-details-marker {
+        display: none;
+    }
+    details.dropdown summary:before {
+        content: '⋮';
+    }
+</style>
+
+{% endblock %}

@@ -27,11 +27,11 @@
         <div class="action-links mt-3">
             <a href="{% url 'approve_article' article.id %}" class="btn btn-sm btn-success">Approve</a>
             |
-            <a href="{% url 'reject_article' article.id %}" class="btn btn-sm btn-danger">Reject</a>
+            <a href="{% url 'reject_article' article.id %}" class="btn btn-sm btn-delete">Reject</a>
             |
-            <a href="{% url 'edit_article_admin' article.id %}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{% url 'edit_article_admin' article.id %}" class="btn btn-sm btn-edit">Edit</a>
             |
-            <a href="{% url 'delete_article_admin' article.id %}" onclick="return confirm('Are you sure you want to delete this article?')" class="btn btn-sm btn-danger">Delete</a>
+            <a href="{% url 'delete_article_admin' article.id %}" onclick="return confirm('Are you sure you want to delete this article?')" class="btn btn-sm btn-delete">Delete</a>
         </div>
     </div>
 

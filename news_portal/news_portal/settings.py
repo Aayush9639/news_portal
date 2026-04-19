@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'articles',
     'advertisements',
     'subscriptions',
+    'ai_assistant',
 
     'django.contrib.sites',
     'allauth',
@@ -73,6 +74,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'advertisements.context_processors.ads_processor',
+                'articles.context_processors.navbar_context',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -154,3 +156,8 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = '1aayush.chaurasiya@gmail.com'
 EMAIL_HOST_PASSWORD = 'okfemamksigohkvk'
+
+# ================= STRIPE CONFIGURATION =================
+STRIPE_PUBLIC_KEY = 'pk_test_your_public_key_here'  # Replace with your Stripe public key
+STRIPE_SECRET_KEY = 'sk_test_your_secret_key_here'   # Replace with your Stripe secret key
+STRIPE_WEBHOOK_SECRET = 'whsec_test_your_webhook_secret'  # Replace with your webhook secret

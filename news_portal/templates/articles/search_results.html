@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .search-container {
+        padding: 30px 20px;
+    }
+    
+    .search-header {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .search-header h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    
+    .search-query {
+        font-size: 18px;
+        opacity: 0.9;
+        margin-top: 10px;
+    }
+    
+    .search-results-count {
+        background: rgba(0,0,0,0.1);
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin-top: 15px;
+        display: inline-block;
+    }
+    
+    .search-result-item {
+        background: white;
+        border-left: 4px solid #0d6efd;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .search-result-item:hover {
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+        transform: translateX(5px);
+    }
+    
+    .result-title {
+        color: #0d6efd;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .result-title:hover {
+        text-decoration: underline;
+    }
+    
+    .result-category {
+        display: inline-block;
+        background-color: #e3f2fd;
+        color: #0d6efd;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    
+    .result-meta {
+        color: #666;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    .result-excerpt {
+        color: #555;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+    
+    .result-read-more {
+        color: #0d6efd;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .result-read-more:hover {
+        color: #0b5ed7;
+        text-decoration: underline;
+    }
+    
+    .no-results {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        color: #666;
+    }
+    
+    .no-results-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+    
+    .no-results h3 {
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #0d6efd;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        background-color: #0b5ed7;
+    }
+</style>
+
+<div class="search-container">
+    <div class="search-header">
+        <h2>🔍 Search Results</h2>
+        {% if query %}
+            <p class="search-query">Search for: "<strong>{{ query }}</strong>"</p>
+            <div class="search-results-count">
+                Found <strong>{{ total_results }}</strong> article{{ total_results|pluralize }}
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if articles %}
+        <div class="search-results-list">
+            {% for article in articles %}
+                <div class="search-result-item">
+                    <span class="result-category">{{ article.category.name }}</span>
+                    <h3 class="result-title">
+                        <a href="{% url 'article_detail' article.id %}" style="text-decoration: none; color: inherit;">
+                            {{ article.title }}
+                        </a>
+                    </h3>
+                    <p class="result-meta">
+                        📅 {{ article.created_at|date:"M d, Y" }} | ✍️ {{ article.journalist.first_name }}
+                    </p>
+                    <p class="result-excerpt">
+                        {{ article.content|truncatewords:30 }}
+                    </p>
+                    <a href="{% url 'article_detail' article.id %}" class="result-read-more">
+                        Read Full Article →
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-results">
+            <div class="no-results-icon">📭</div>
+            <h3>No Results Found</h3>
+            {% if query %}
+                <p>Sorry, we couldn't find any articles matching "<strong>{{ query }}</strong>"</p>
+                <p>Try using different keywords or <a href="{% url 'article_list' %}" style="color: #0d6efd; font-weight: bold;">browse all articles</a></p>
+            {% else %}
+                <p>Please enter a search keyword to find articles</p>
+            {% endif %}
+            <a href="{% url 'article_list' %}" class="back-link">← Browse All Articles</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

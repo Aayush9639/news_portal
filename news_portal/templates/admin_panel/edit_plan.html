@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg">
+                <div class="card-header bg-gradient">
+                    <h4 class="text-white mb-0">{{ title }}</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Plan Information Row -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_name" class="form-label"><strong>Plan Name</strong></label>
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <small class="text-danger d-block mt-1">{{ form.name.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_plan_type" class="form-label"><strong>Plan Type</strong></label>
+                                    {{ form.plan_type }}
+                                    {% if form.plan_type.errors %}
+                                        <small class="text-danger d-block mt-1">{{ form.plan_type.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Row -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_price" class="form-label"><strong>Price (₹ INR)</strong></label>
+                                    {{ form.price }}
+                                    <small class="text-muted d-block mt-1">Enter amount in Indian Rupees</small>
+                                    {% if form.price.errors %}
+                                        <small class="text-danger d-block mt-1">{{ form.price.errors }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_is_active" class="form-label">
+                                        {{ form.is_active }}
+                                        <span class="form-check-label ms-2"><strong>Active</strong></span>
+                                    </label>
+                                    <small class="text-muted d-block mt-1">Uncheck to hide from users</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label for="id_description" class="form-label"><strong>Description</strong></label>
+                                {{ form.description }}
+                                <small class="text-muted d-block mt-1">Brief description shown to users</small>
+                                {% if form.description.errors %}
+                                    <small class="text-danger d-block mt-1">{{ form.description.errors }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Features -->
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label for="id_features" class="form-label"><strong>Features</strong></label>
+                                {{ form.features }}
+                                <small class="text-muted d-block mt-1">
+                                    Comma-separated features (each on new line is recommended)
+                                </small>
+                                {% if form.features.errors %}
+                                    <small class="text-danger d-block mt-1">{{ form.features.errors }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Stripe Price ID -->
+                        <div class="mb-4">
+                            <div class="form-group">
+                                <label for="id_stripe_price_id" class="form-label"><strong>Stripe Price ID (Optional)</strong></label>
+                                {{ form.stripe_price_id }}
+                                <small class="text-muted d-block mt-1">Price ID from your Stripe dashboard</small>
+                                {% if form.stripe_price_id.errors %}
+                                    <small class="text-danger d-block mt-1">{{ form.stripe_price_id.errors }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 pt-3 border-top">
+                            <button type="submit" class="btn btn-primary flex-grow-1">
+                                💾 Save Plan
+                            </button>
+                            <a href="{% url 'manage_plans' %}" class="btn btn-secondary">
+                                ↩️ Cancel
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%) !important;
+    }
+    .form-control, .form-select {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+</style>
+
+{% endblock %}

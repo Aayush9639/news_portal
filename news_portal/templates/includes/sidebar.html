@@ -10,6 +10,7 @@
     {% if user.role == 'reader' %}
         <a href="{% url 'reader_dashboard' %}">📊 Dashboard</a>
         <a href="{% url 'article_list' %}">📰 Articles</a>
+        <a href="{% url 'subscription_plans' %}">💎 Subscriptions</a>
 
     {% elif user.role == 'journalist' %}
         <a href="{% url 'journalist_dashboard' %}">📊 Dashboard</a>
@@ -21,7 +22,15 @@
         <p class="sidebar-heading text-center">Management</p>
         <a href="{% url 'review_articles' %}">📰 Articles</a>
         <a href="{% url 'manage_users' %}">👥 Users</a>
-        <a href="{% url 'review_ads' %}">📢 ads</a>
+        <a href="{% url 'review_ads' %}">📢 Ads</a>
+        
+        <!-- Subscriptions Submenu -->
+        <div class="sidebar-submenu">
+            <a href="{% url 'manage_plans' %}" class="submenu-item">💎 Subscription Plans</a>
+            <a href="{% url 'manage_subscriptions' %}" class="submenu-item">👥 User Subscriptions</a>
+            <a href="{% url 'manage_payments' %}" class="submenu-item">💳 Payments</a>
+        </div>
+        
         <a href="{% url 'article_list' %}">📰 View News</a>
 
     {% elif user.role == 'advertiser' %}

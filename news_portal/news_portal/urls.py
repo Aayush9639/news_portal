@@ -26,6 +26,7 @@ urlpatterns = [
     path('ads/', include('advertisements.urls')),
     path('subscriptions/', include('subscriptions.urls')),
     path('admin-panel/', include('admin_panel.urls')),
+    path('ai/', include('ai_assistant.urls')),
 ]
 
 urlpatterns += static(

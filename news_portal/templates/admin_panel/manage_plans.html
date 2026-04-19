@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>💎 Manage Subscription Plans</h2>
+        <a href="{% url 'add_plan' %}" class="btn btn-primary">
+            ➕ Add New Plan
+        </a>
+    </div>
+
+    {% if plans %}
+        <div class="row g-4">
+            {% for plan in plans %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card subscription-admin-card h-100 shadow-sm">
+                        <!-- Plan Header -->
+                        <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);">
+                            <h5 class="text-white mb-0">{{ plan.name }}</h5>
+                        </div>
+
+                        <!-- Plan Body -->
+                        <div class="card-body">
+                            <!-- Type Badge -->
+                            <div class="mb-2">
+                                {% if plan.plan_type == 'free' %}
+                                    <span class="badge bg-success">Free</span>
+                                {% elif plan.plan_type == 'basic' %}
+                                    <span class="badge bg-info">Basic</span>
+                                {% elif plan.plan_type == 'premium' %}
+                                    <span class="badge bg-warning">Premium</span>
+                                {% endif %}
+                                {% if plan.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-3">
+                                <h3 class="text-primary">₹{{ plan.price }}</h3>
+                                <small class="text-muted">
+                                    {% if plan.plan_type != 'free' %}/month{% endif %}
+                                </small>
+                            </div>
+
+                            <!-- Description -->
+                            <p class="card-text text-muted small">{{ plan.description }}</p>
+
+                            <!-- Features -->
+                            <div class="mb-3">
+                                <strong class="small">Features:</strong>
+                                <ul class="small mb-0">
+                                    {% for feature in plan.features.split|add:"," %}
+                                        {% if feature|length > 1 %}
+                                            <li class="text-dark">{{ feature|safe }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                            <!-- Stripe Price ID -->
+                            {% if plan.stripe_price_id %}
+                                <small class="text-muted d-block mb-2">
+                                    <code>{{ plan.stripe_price_id }}</code>
+                                </small>
+                            {% endif %}
+
+                            <!-- Created Date -->
+                            <small class="text-muted d-block">
+                                Created: {{ plan.created_at|date:"M d, Y" }}
+                            </small>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="card-footer bg-light">
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'edit_plan' plan.id %}" class="btn btn-sm btn-outline-primary flex-fill">
+                                    ✏️ Edit
+                                </a>
+                                <a href="{% url 'delete_plan' plan.id %}" class="btn btn-sm btn-outline-danger flex-fill">
+                                    🗑️ Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <h5>📭 No Subscription Plans Found</h5>
+            <p>Create your first subscription plan to get started.</p>
+            <a href="{% url 'add_plan' %}" class="btn btn-primary">Create First Plan</a>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    .subscription-admin-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .subscription-admin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2) !important;
+    }
+    .card-header {
+        border-bottom: 2px solid #0b5ed7;
+    }
+    .bg-gradient {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%) !important;
+    }
+</style>
+
+{% endblock %}

@@ -4,6 +4,8 @@ from .models import Article, Comment
 from django.contrib.auth.decorators import login_required
 from users.decorators import role_required
 from django.shortcuts import get_object_or_404
+from ai_assistant.services import AIRecommendationEngine
+from django.db.models import Q
 
 @login_required
 @role_required(['journalist'])
@@ -18,12 +20,17 @@ def journalist_dashboard(request):
 @role_required(['reader'])
 def reader_dashboard(request):
     articles = Article.objects.filter(status='approved').order_by('-created_at')[:5]
+    
+    # Get AI recommendations
+    recommendations = AIRecommendationEngine.get_recommendations(request.user, limit=4)
+    trending = AIRecommendationEngine.get_trending_articles(limit=3)
 
     context = {
         'articles': articles,
         'total_articles': Article.objects.filter(status='approved').count(),
-        'total_categories': Article.objects.filter(status='approved').values('category').distinct().count()
-
+        'total_categories': Article.objects.filter(status='approved').values('category').distinct().count(),
+        'recommended_articles': recommendations,
+        'trending_articles': trending,
     }
     return render(request, 'articles/reader_dashboard.html', context)
 
@@ -76,9 +83,15 @@ def delete_article(request, id):
 
 def article_list(request):
     articles = Article.objects.filter(status='approved').order_by('-created_at')
-
+    
+    # Filter by category if provided
+    category_id = request.GET.get('category')
+    if category_id:
+        articles = articles.filter(category_id=category_id)
+    
     return render(request, 'articles/article_list.html', {
-        'articles': articles
+        'articles': articles,
+        'selected_category': category_id,
     })
 
 @login_required
@@ -111,4 +124,24 @@ def article_detail(request, id):
         'article': article,
         'form': form,
         'comments': comments
+    })
+
+
+def search_articles(request):
+    """Search articles by keywords"""
+    query = request.GET.get('q', '')
+    articles = []
+    
+    if query:
+        articles = Article.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(category__name__icontains=query),
+            status='approved'
+        ).order_by('-created_at')
+    
+    return render(request, 'articles/search_results.html', {
+        'articles': articles,
+        'query': query,
+        'total_results': articles.count()
     })

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .header {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .plan-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #0d6efd;
+            margin: 15px 0;
+        }
+        .features {
+            list-style: none;
+            padding: 10px 0;
+        }
+        .features li {
+            padding: 5px 0;
+        }
+        .features li:before {
+            content: "✓ ";
+            color: #0d6efd;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+        .btn {
+            display: inline-block;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✓ Subscription Confirmed</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hi {{ user.first_name|default:user.username }},</p>
+            
+            <p>Thank you for subscribing to <strong>{{ plan.name }}</strong>! Your payment has been received and your subscription is now active.</p>
+            
+            <div class="plan-details">
+                <h3>{{ plan.name }}</h3>
+                <p><strong>Price:</strong> ₹{{ plan.price }}/month</p>
+                <p><strong>Description:</strong> {{ plan.description }}</p>
+                <h4>Included Features:</h4>
+                <ul class="features">
+                    {% for feature in plan.features_list %}
+                        <li>{{ feature }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <p>You can now access all premium features of MyNewsPortal. Start exploring:</p>
+            
+            <p style="text-align: center;">
+                <a href="https://mynewsportal.com/dashboard/" class="btn">Go to Dashboard</a>
+            </p>
+            
+            <p><strong>What's next?</strong></p>
+            <ul>
+                <li>Explore exclusive articles</li>
+                <li>Get personalized recommendations</li>
+                <li>Save articles for later reading</li>
+                <li>Manage your subscription settings</li>
+            </ul>
+            
+            <p>If you have any questions, feel free to contact our support team.</p>
+            
+            <p>Happy reading!</p>
+            <p><strong>The MyNewsPortal Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 MyNewsPortal. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply to this address.</p>
+        </div>
+    </div>
+</body>
+</html>

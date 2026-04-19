@@ -14,5 +14,12 @@ urlpatterns = [
     path('ads/', review_ads, name='review_ads'),
     path('approve_ad/<int:id>/', approve_ad, name='approve_ad'),
     path('reject_ad/<int:id>/', reject_ad, name='reject_ad'),
-
+    
+    # Subscription management URLs
+    path('subscriptions/plans/', manage_subscription_plans, name='manage_plans'),
+    path('subscriptions/plans/add/', add_subscription_plan, name='add_plan'),
+    path('subscriptions/plans/edit/<int:id>/', edit_subscription_plan, name='edit_plan'),
+    path('subscriptions/plans/delete/<int:id>/', delete_subscription_plan, name='delete_plan'),
+    path('subscriptions/users/', manage_user_subscriptions, name='manage_subscriptions'),
+    path('subscriptions/payments/', manage_payments, name='manage_payments'),
 ]

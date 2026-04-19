@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .alert {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .plan-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #0d6efd;
+            margin: 15px 0;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+        .btn {
+            display: inline-block;
+            background: #0d6efd;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✕ Payment Failed</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hi {{ user.first_name|default:user.username }},</p>
+            
+            <p>Unfortunately, your payment for the <strong>{{ plan.name }}</strong> subscription could not be processed.</p>
+            
+            <div class="alert">
+                <strong>What does this mean?</strong>
+                <p>Your subscription has not been activated. Your account still has access to free content only.</p>
+            </div>
+            
+            {% if plan %}
+            <div class="plan-details">
+                <h3>{{ plan.name }}</h3>
+                <p><strong>Price:</strong> ${{ plan.price }}/month</p>
+                <p><strong>Description:</strong> {{ plan.description }}</p>
+            </div>
+            {% endif %}
+            
+            <h4>Common reasons for payment failure:</h4>
+            <ul>
+                <li>Incorrect card number or security code</li>
+                <li>Expired card or billing address mismatch</li>
+                <li>Insufficient funds in your account</li>
+                <li>Card blocked by your bank for security reasons</li>
+                <li>Temporary payment processing issue</li>
+            </ul>
+            
+            <h4>What you can do:</h4>
+            <ul>
+                <li>Check that your card details are correct</li>
+                <li>Verify your card hasn't expired</li>
+                <li>Contact your bank to confirm the card is active</li>
+                <li>Try again with a different payment method</li>
+            </ul>
+            
+            <p style="text-align: center;">
+                <a href="https://mynewsportal.com/subscriptions/plans/" class="btn">Try Payment Again</a>
+            </p>
+            
+            <p>If you continue to experience issues, please contact our support team for assistance.</p>
+            
+            <p>Best regards,<br><strong>The MyNewsPortal Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 MyNewsPortal. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply to this address.</p>
+        </div>
+    </div>
+</body>
+</html>

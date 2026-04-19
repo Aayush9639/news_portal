@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2>💳 Manage Payments</h2>
+        <p class="text-muted">View all payment transactions and revenue tracking</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Payments</h6>
+                    <h3 class="text-primary">{{ total_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Completed</h6>
+                    <h3 class="text-success">{{ completed_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Revenue</h6>
+                    <h3 class="text-info">₹{{ total_amount|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted">Success Rate</h6>
+                    <h3 class="text-warning">
+                        {% if total_count > 0 %}
+                            {{ completed_count|add:0|mul:100|div:total_count|floatformat:1 }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Filter by Status:</strong></label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100 mt-2">🔍 Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payments Table -->
+    {% if payments %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>📧 User Email</th>
+                        <th>💎 Plan</th>
+                        <th>💰 Amount</th>
+                        <th>💵 Currency</th>
+                        <th>🔧 Method</th>
+                        <th>📅 Date</th>
+                        <th>✅ Status</th>
+                        <th>📝 Transaction ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td>
+                                <small>
+                                    <strong>{{ payment.user.get_full_name|default:payment.user.username }}</strong>
+                                    <br/>
+                                    <code class="text-muted">{{ payment.user.email }}</code>
+                                </small>
+                            </td>
+                            <td>
+                                {% if payment.plan %}
+                                    <span class="badge bg-info">{{ payment.plan.name }}</span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>₹{{ payment.amount|floatformat:2 }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ payment.currency }}</span>
+                            </td>
+                            <td>
+                                {% if payment.payment_method == 'stripe' %}
+                                    <span class="badge bg-primary">Stripe</span>
+                                {% else %}
+                                    {{ payment.payment_method }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small>{{ payment.created_at|date:"M d, Y H:i" }}</small>
+                            </td>
+                            <td>
+                                {% if payment.payment_status == 'completed' %}
+                                    <span class="badge bg-success">✓ Completed</span>
+                                {% elif payment.payment_status == 'pending' %}
+                                    <span class="badge bg-warning">⏳ Pending</span>
+                                {% elif payment.payment_status == 'failed' %}
+                                    <span class="badge bg-danger">✗ Failed</span>
+                                {% elif payment.payment_status == 'refunded' %}
+                                    <span class="badge bg-secondary">↩️ Refunded</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ payment.payment_status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <details class="dropdown">
+                                    <summary class="btn btn-sm btn-outline-secondary">🔍</summary>
+                                    <div class="dropdown-menu p-2 dropdown-menu-end">
+                                        <small class="text-muted d-block mb-2"><strong>Transaction:</strong></small>
+                                        <code class="text-muted d-block" style="word-break: break-all; font-size: 0.75rem;">
+                                            {{ payment.transaction_id }}
+                                        </code>
+                                        {% if payment.stripe_payment_intent_id %}
+                                            <small class="text-muted d-block mt-2 mb-1"><strong>Stripe Intent:</strong></small>
+                                            <code class="text-muted d-block" style="word-break: break-all; font-size: 0.75rem;">
+                                                {{ payment.stripe_payment_intent_id }}
+                                            </code>
+                                        {% endif %}
+                                        {% if payment.completed_at %}
+                                            <small class="text-muted d-block mt-2">
+                                                Completed: {{ payment.completed_at|date:"M d, Y H:i" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                </details>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-info mt-3">
+            <strong>📊 Showing {{ payments|length }} Transaction(s)</strong>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <h5>💭 No Payments Found</h5>
+            <p>No payment transactions match the selected filters.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    details summary {
+        cursor: pointer;
+        list-style: none;
+    }
+    details summary::-webkit-details-marker {
+        display: none;
+    }
+    
+    .dropdown-menu {
+        min-width: 300px;
+        max-width: 400px;
+    }
+    
+    code {
+        background: #f0f0f0;
+        padding: 2px 4px;
+        border-radius: 2px;
+        font-size: 0.85rem;
+    }
+</style>
+
+{% endblock %}

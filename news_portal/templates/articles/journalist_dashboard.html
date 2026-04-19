@@ -5,34 +5,26 @@
 <div class="container mt-4">
 
     <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>✍️ Journalist Dashboard</h2>
-            <p class="text-muted mb-0">Welcome {{ user.first_name }}</p>
-        </div>
+    <div class="mb-4">
+        <h2>✍️ Journalist Dashboard</h2>
+        <p class="text-muted mb-0">Welcome {{ user.first_name }}</p>
+    </div>
 
-        <div>
-            <a href="{% url 'submit_article' %}" class="btn btn-success me-2">
-                ➕ Submit Article
-            </a>
-            <a href="{% url 'article_list' %}" class="btn btn-primary">
-                📰 View News
-            </a>
+    <!-- TITLE + COUNT -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">📄 Your Articles</h4>
+
+        <div class="stat-card-mini">
+            <span>Total</span>
+            <strong>{{ articles|length }}</strong>
         </div>
     </div>
 
-    <!-- ARTICLES TABLE -->
+    <!-- TABLE CARD -->
     <div class="card shadow-sm p-3">
 
-        <h4 class="mb-3">📄 Your Articles</h4>
-
-        <div class="stat-card">
-            <p class="stat-title">Total Articles</p>
-            <h4 class="stat-value">{{ articles|length }}</h4>
-        </div>        
-
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
+            <table class="table table-hover align-middle mb-0">
 
                 <thead class="table-light">
                     <tr>
@@ -48,7 +40,6 @@
                     <tr>
                         <td>{{ article.title }}</td>
 
-                        <!-- STATUS BADGE -->
                         <td>
                             <span class="badge status-{{ article.status }}">
                                 {{ article.status|title }}
@@ -57,17 +48,18 @@
 
                         <td>{{ article.created_at|date:"d M Y" }}</td>
 
-                        <!-- ACTIONS -->
-                        <td class="text-center">
-                            <a href="{% url 'edit_article' article.id %}" 
-                               class="btn btn-edit btn-sm">
-                                ✏️ Edit
-                            </a>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{% url 'edit_article' article.id %}" 
+                                   class="btn btn-edit">
+                                    ✏ Edit
+                                </a>
 
-                            <a href="{% url 'delete_article' article.id %}" 
-                               class="btn btn-delete btn-sm">
-                                🗑 Delete
-                            </a>
+                                <a href="{% url 'delete_article' article.id %}" 
+                                   class="btn btn-delete">
+                                    🗑 Delete
+                                </a>
+                            </div>
                         </td>
                     </tr>
 
