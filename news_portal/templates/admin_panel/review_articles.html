@@ -2,43 +2,92 @@
 
 {% block content %}
 
-<h2 class="mb-4">📝 Pending Articles</h2>
+<div class="container">
+    <h2 class="mb-4">📝 Pending Articles</h2>
 
-{% for article in articles %}
-    <div class="card mb-4 shadow-sm p-4">
-
-        <h3 class="mb-2">{{ article.title }}</h3>
-
-        <p class="text-muted mb-1">
-            <strong>By:</strong> {{ article.journalist.username }}
-        </p>
-
-        <p class="mb-1">
-            <strong>Category:</strong>
-            <span class="badge bg-secondary">{{ article.category }}</span>
-        </p>
-
-        <p class="mt-2"><strong>Content:</strong></p>
-        <p>{{ article.content|truncatewords:40 }}</p>
-
-        <p><strong>Status:</strong> 
-            <span class="badge bg-warning text-dark">{{ article.status }}</span>
-        </p>
-        <div class="action-links mt-3">
-            <a href="{% url 'approve_article' article.id %}" class="btn btn-sm btn-success">Approve</a>
-            |
-            <a href="{% url 'reject_article' article.id %}" class="btn btn-sm btn-delete">Reject</a>
-            |
-            <a href="{% url 'edit_article_admin' article.id %}" class="btn btn-sm btn-edit">Edit</a>
-            |
-            <a href="{% url 'delete_article_admin' article.id %}" onclick="return confirm('Are you sure you want to delete this article?')" class="btn btn-sm btn-delete">Delete</a>
-        </div>
+    <!-- Filters -->
+    <div class="card mb-4 p-3">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label"><strong>🗺️ State:</strong></label>
+                <select name="state" class="form-select" onchange="this.form.submit()">
+                    <option value="">All States</option>
+                    <option value="maharashtra" {% if selected_state == 'maharashtra' %}selected{% endif %}>Maharashtra</option>
+                    <option value="delhi" {% if selected_state == 'delhi' %}selected{% endif %}>Delhi</option>
+                    <option value="karnataka" {% if selected_state == 'karnataka' %}selected{% endif %}>Karnataka</option>
+                    <option value="tamil_nadu" {% if selected_state == 'tamil_nadu' %}selected{% endif %}>Tamil Nadu</option>
+                    <option value="uttar_pradesh" {% if selected_state == 'uttar_pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                    <option value="west_bengal" {% if selected_state == 'west_bengal' %}selected{% endif %}>West Bengal</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label"><strong>🏙️ City:</strong></label>
+                <select name="city" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Cities</option>
+                    <option value="mumbai" {% if selected_city == 'mumbai' %}selected{% endif %}>Mumbai</option>
+                    <option value="delhi" {% if selected_city == 'delhi' %}selected{% endif %}>Delhi</option>
+                    <option value="bangalore" {% if selected_city == 'bangalore' %}selected{% endif %}>Bangalore</option>
+                    <option value="hyderabad" {% if selected_city == 'hyderabad' %}selected{% endif %}>Hyderabad</option>
+                    <option value="kolkata" {% if selected_city == 'kolkata' %}selected{% endif %}>Kolkata</option>
+                    <option value="pune" {% if selected_city == 'pune' %}selected{% endif %}>Pune</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
+            </div>
+        </form>
     </div>
 
-{% empty %}
-<div class="alert alert-info">
-    No pending articles
+    <!-- Articles List -->
+    {% if articles %}
+        {% for article in articles %}
+            <div class="card mb-4 shadow-sm p-4">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h3 class="mb-2">{{ article.title }}</h3>
+
+                        <p class="text-muted mb-2">
+                            <strong>✍️ By:</strong> {{ article.journalist.username }}
+                        </p>
+
+                        <div class="mb-2">
+                            <strong>📂 Category:</strong>
+                            <span class="badge bg-secondary">{{ article.category }}</span>
+                            
+                            <strong class="ms-3">📍 Location:</strong>
+                            <span class="badge bg-info">{{ article.get_state_display }}</span>
+                            <span class="badge bg-info">{{ article.get_city_display }}</span>
+                        </div>
+
+                        <p class="mt-2"><strong>✍️ Content:</strong></p>
+                        <p class="text-muted">{{ article.content|truncatewords:50 }}</p>
+
+                        <p><strong>Status:</strong> 
+                            <span class="badge bg-warning text-dark">{{ article.get_status_display }}</span>
+                        </p>
+                    </div>
+                    <div class="col-md-2">
+                        <small class="text-muted">
+                            📅 {{ article.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="action-links mt-3">
+                    <a href="{% url 'approve_article' article.id %}" class="btn btn-sm btn-success">✅ Approve</a>
+                    <a href="{% url 'reject_article' article.id %}" class="btn btn-sm btn-danger">❌ Reject</a>
+                    <a href="{% url 'edit_article_admin' article.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
+                    <a href="{% url 'delete_article_admin' article.id %}" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-secondary">🗑️ Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <h5>📭 No Pending Articles</h5>
+            <p>All articles have been reviewed!</p>
+        </div>
+    {% endif %}
+
 </div>
-{% endfor %}
 
 {% endblock %}

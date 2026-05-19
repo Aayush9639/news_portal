@@ -153,13 +153,17 @@
                             {{ article.title }}
                         </a>
                     </h3>
+                    <div class="mb-2">
+                        <span class="badge bg-info me-2">🗺️ {{ article.get_state_display }}</span>
+                        <span class="badge bg-info">🏙️ {{ article.get_city_display }}</span>
+                    </div>
                     <p class="result-meta">
                         📅 {{ article.created_at|date:"M d, Y" }} | ✍️ {{ article.journalist.first_name }}
                     </p>
                     <p class="result-excerpt">
                         {{ article.content|truncatewords:30 }}
                     </p>
-                    <a href="{% url 'article_detail' article.id %}" class="result-read-more">
+                    <a href="{% url 'article_detail' article.id }}" class="result-read-more">
                         Read Full Article →
                     </a>
                 </div>

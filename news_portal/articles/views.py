@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import ArticleForm, CommentForm
-from .models import Article, Comment
+from .models import Article, Comment, INDIAN_STATES, INDIAN_CITIES
 from django.contrib.auth.decorators import login_required
 from users.decorators import role_required
 from django.shortcuts import get_object_or_404
@@ -89,9 +89,23 @@ def article_list(request):
     if category_id:
         articles = articles.filter(category_id=category_id)
     
+    # Filter by state if provided
+    state = request.GET.get('state')
+    if state:
+        articles = articles.filter(state=state)
+    
+    # Filter by city if provided
+    city = request.GET.get('city')
+    if city:
+        articles = articles.filter(city=city)
+    
     return render(request, 'articles/article_list.html', {
         'articles': articles,
         'selected_category': category_id,
+        'selected_state': state,
+        'selected_city': city,
+        'states': INDIAN_STATES,
+        'cities': INDIAN_CITIES,
     })
 
 @login_required

@@ -4,7 +4,7 @@ from .models import Article, Comment
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'content', 'category']
+        fields = ['title', 'content', 'category', 'state', 'city']
 
         widgets = {
             'title': forms.TextInput(attrs={
@@ -16,6 +16,8 @@ class ArticleForm(forms.ModelForm):
                 'rows': 10
                 }),
             'category': forms.Select(attrs={'class': 'form-select'}),
+            'state': forms.Select(attrs={'class': 'form-select'}),
+            'city': forms.Select(attrs={'class': 'form-select'}),
         }
 
 class CommentForm(forms.ModelForm):

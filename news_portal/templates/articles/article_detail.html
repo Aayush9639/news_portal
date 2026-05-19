@@ -9,9 +9,14 @@
 
         <h2 class="mb-3">{{ article.title }}</h2>
 
+        <div class="mb-3">
+            <span class="badge bg-secondary me-2">📂 {{ article.category }}</span>
+            <span class="badge bg-info me-2">🗺️ {{ article.get_state_display }}</span>
+            <span class="badge bg-info">🏙️ {{ article.get_city_display }}</span>
+        </div>
+
         <div class="mb-2 text-muted">
-            <span>✍️ {{ article.journalist.username }}</span> |
-            <span>📂 {{ article.category }}</span>
+            <small>✍️ By {{ article.journalist.username }} | 📅 {{ article.created_at|date:"M d, Y H:i" }}</small>
         </div>
 
         <hr>
@@ -31,6 +36,7 @@
             <div class="comment-box mb-3">
                 <strong>{{ comment.user.username }}</strong>
                 <p class="mb-1">{{ comment.content }}</p>
+                <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
             </div>
         {% empty %}
             <p class="text-muted">No comments yet</p>

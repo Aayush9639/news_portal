@@ -5,7 +5,7 @@
 <div class="checkout-container">
     <div class="checkout-card">
         <div class="checkout-header">
-            <h1>Complete Your Payment</h1>
+            <h1>💳 Complete Your Payment</h1>
             <p>Secure payment powered by Stripe (Indian Rupees)</p>
         </div>
 
@@ -24,19 +24,57 @@
             </div>
         </div>
 
-        <form id="payment-form">
-            <div id="card-element" class="card-element"></div>
-            <div id="card-errors" class="error-message"></div>
-            
-            <button type="submit" id="submit-btn" class="btn-pay">
-                Pay ₹{{ plan.price }}
+        <!-- Payment Method Tabs -->
+        <div class="payment-method-tabs">
+            <button class="tab-btn active" data-tab="card">
+                💳 Card Payment
             </button>
-        </form>
+            <button class="tab-btn" data-tab="upi">
+                📱 UPI Payment
+            </button>
+        </div>
+
+        <!-- Card Payment Tab -->
+        <div id="card-tab" class="tab-content active">
+            <form id="payment-form">
+                <div id="card-element" class="card-element"></div>
+                <div id="card-errors" class="error-message"></div>
+                
+                <button type="submit" id="submit-btn" class="btn-pay">
+                    💳 Pay ₹{{ plan.price }} with Card
+                </button>
+            </form>
+        </div>
+
+        <!-- UPI Payment Tab -->
+        <div id="upi-tab" class="tab-content">
+            <form id="upi-payment-form">
+                <div class="form-group">
+                    <label for="upi-id" class="form-label"><strong>Enter UPI ID</strong></label>
+                    <input 
+                        type="text" 
+                        id="upi-id" 
+                        class="form-control" 
+                        placeholder="yourname@bankname (e.g., user@okhdfcbank)" 
+                        required
+                    />
+                    <small class="text-muted d-block mt-2">
+                        📱 We support all major UPI apps: Google Pay, PhonePe, BHIM, Paytm
+                    </small>
+                </div>
+
+                <div id="upi-errors" class="error-message"></div>
+                
+                <button type="submit" id="upi-submit-btn" class="btn-pay">
+                    📱 Pay ₹{{ plan.price }} with UPI
+                </button>
+            </form>
+        </div>
 
         <div class="payment-info">
-            <p>💳 Your payment information is secure and encrypted</p>
+            <p>✅ Your payment information is secure and encrypted</p>
             <p>🔒 Powered by Stripe, a trusted payment processor</p>
-            <p>₹ All prices are in Indian Rupees</p>
+            <p>🇮🇳 All prices are in Indian Rupees</p>
         </div>
     </div>
 </div>
@@ -48,8 +86,19 @@
     const cardElement = elements.create('card');
     cardElement.mount('#card-element');
 
-    const form = document.getElementById('payment-form');
-    const submitBtn = document.getElementById('submit-btn');
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+        });
+    });
+
+    // Card Payment
+    const cardForm = document.getElementById('payment-form');
+    const cardSubmitBtn = document.getElementById('submit-btn');
 
     cardElement.on('change', function(event) {
         const displayError = document.getElementById('card-errors');
@@ -62,10 +111,10 @@
         }
     });
 
-    form.addEventListener('submit', async function(event) {
+    cardForm.addEventListener('submit', async function(event) {
         event.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Processing...';
+        cardSubmitBtn.disabled = true;
+        cardSubmitBtn.textContent = '⏳ Processing...';
 
         const {error, paymentIntent} = await stripe.confirmCardPayment('{{ client_secret }}', {
             payment_method: {
@@ -78,12 +127,70 @@
 
         if (error) {
             document.getElementById('card-errors').textContent = error.message;
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Pay ${{ plan.price }}';
+            cardSubmitBtn.disabled = false;
+            cardSubmitBtn.textContent = '💳 Pay ₹{{ plan.price }} with Card';
         } else {
             if (paymentIntent.status === 'succeeded') {
                 window.location.href = '/subscriptions/payment-success/?subscription_id={{ user_subscription.id }}';
             }
+        }
+    });
+
+    // UPI Payment
+    const upiForm = document.getElementById('upi-payment-form');
+    const upiSubmitBtn = document.getElementById('upi-submit-btn');
+    const upiIdInput = document.getElementById('upi-id');
+
+    // Validate UPI ID format
+    function validateUPIId(upiId) {
+        const upiPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+$/;
+        return upiPattern.test(upiId);
+    }
+
+    upiForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const upiId = upiIdInput.value.trim();
+        const upiErrors = document.getElementById('upi-errors');
+
+        if (!validateUPIId(upiId)) {
+            upiErrors.textContent = '❌ Please enter a valid UPI ID (e.g., user@okhdfcbank)';
+            upiErrors.style.display = 'block';
+            return;
+        }
+
+        upiErrors.style.display = 'none';
+        upiSubmitBtn.disabled = true;
+        upiSubmitBtn.textContent = '⏳ Processing...';
+
+        try {
+            // Create payment with UPI method
+            const {error, paymentIntent} = await stripe.confirmUpiPayment('{{ client_secret }}', {
+                payment_method: {
+                    upi: {
+                        number: upiId
+                    },
+                    billing_details: {
+                        email: '{{ user.email }}'
+                    }
+                }
+            });
+
+            if (error) {
+                upiErrors.textContent = '❌ ' + error.message;
+                upiErrors.style.display = 'block';
+                upiSubmitBtn.disabled = false;
+                upiSubmitBtn.textContent = '📱 Pay ₹{{ plan.price }} with UPI';
+            } else {
+                if (paymentIntent.status === 'succeeded') {
+                    window.location.href = '/subscriptions/payment-success/?subscription_id={{ user_subscription.id }}';
+                }
+            }
+        } catch (e) {
+            upiErrors.textContent = '❌ Payment processing failed. Please try again.';
+            upiErrors.style.display = 'block';
+            upiSubmitBtn.disabled = false;
+            upiSubmitBtn.textContent = '📱 Pay ₹{{ plan.price }} with UPI';
         }
     });
 </script>

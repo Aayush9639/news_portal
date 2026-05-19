@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import models
 from users.models import User
 from django import forms
-from articles.models import Article
+from articles.models import Article, INDIAN_STATES, INDIAN_CITIES
 from articles.forms import ArticleForm
 from django.shortcuts import get_object_or_404
 from advertisements.models import Advertisement
@@ -43,8 +43,26 @@ def admin_dashboard(request):
 #article approval view
 @admin_required
 def review_articles(request):
-   articles = Article.objects.filter(status='pending')
-   return render(request, 'admin_panel/review_articles.html', {'articles': articles})
+    articles = Article.objects.filter(status='pending')
+    
+    # Filter by state if provided
+    state = request.GET.get('state')
+    if state:
+        articles = articles.filter(state=state)
+    
+    # Filter by city if provided
+    city = request.GET.get('city')
+    if city:
+        articles = articles.filter(city=city)
+    
+    context = {
+        'articles': articles,
+        'selected_state': state,
+        'selected_city': city,
+        'states': INDIAN_STATES,
+        'cities': INDIAN_CITIES,
+    }
+    return render(request, 'admin_panel/review_articles.html', context)
 
 
 @admin_required

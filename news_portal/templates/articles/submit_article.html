@@ -4,7 +4,7 @@
 
 <div class="row justify-content-center">
 
-    <div class="col-lg-6 col-md-8">
+    <div class="col-lg-8 col-md-10">
 
         <!-- FORM CARD -->
         <div class="card shadow-sm p-4 form-card">
@@ -17,18 +17,33 @@
             <form method="POST">
                 {% csrf_token %}
 
+                <!-- Title -->
                 <div class="mb-3">
-                    <label class="form-label">Title</label>
+                    <label class="form-label"><strong>📌 Title</strong></label>
                     {{ form.title }}
                 </div>
 
+                <!-- Category -->
                 <div class="mb-3">
-                    <label class="form-label">Category</label>
+                    <label class="form-label"><strong>📂 Category</strong></label>
                     {{ form.category }}
                 </div>
 
+                <!-- State and City Row -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>🗺️ State</strong></label>
+                        {{ form.state }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>🏙️ City</strong></label>
+                        {{ form.city }}
+                    </div>
+                </div>
+
+                <!-- Content -->
                 <div class="mb-3">
-                    <label class="form-label">Content</label>
+                    <label class="form-label"><strong>✍️ Content</strong></label>
                     {{ form.content }}
                 </div>
 

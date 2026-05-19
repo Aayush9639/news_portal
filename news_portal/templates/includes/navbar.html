@@ -11,13 +11,48 @@
         </form>
 
         <!-- Category Filter -->
-        <form method="GET" action="{% url 'article_list' %}" style="display: flex; margin: 0; padding: 0;">
-            <select name="category" class="filter-dropdown" onchange="this.form.submit()">
+        <form method="GET" action="{% url 'article_list' %}" style="display: flex; margin: 0; padding: 0;" id="filter-form">
+            <select name="category" class="filter-dropdown" onchange="document.getElementById('filter-form').submit()">
                 <option value="">📂 All Categories</option>
                 {% for category in categories %}
                     <option value="{{ category.id }}" {% if request.GET.category|add:"0" == category.id %}selected{% endif %}>{{ category.name }}</option>
                 {% endfor %}
             </select>
+            
+            <!-- State Filter -->
+            <select name="state" class="filter-dropdown" onchange="document.getElementById('filter-form').submit()">
+                <option value="">🗺️ All States</option>
+                <option value="maharashtra" {% if request.GET.state == 'maharashtra' %}selected{% endif %}>Maharashtra</option>
+                <option value="delhi" {% if request.GET.state == 'delhi' %}selected{% endif %}>Delhi</option>
+                <option value="karnataka" {% if request.GET.state == 'karnataka' %}selected{% endif %}>Karnataka</option>
+                <option value="tamil_nadu" {% if request.GET.state == 'tamil_nadu' %}selected{% endif %}>Tamil Nadu</option>
+                <option value="uttar_pradesh" {% if request.GET.state == 'uttar_pradesh' %}selected{% endif %}>Uttar Pradesh</option>
+                <option value="west_bengal" {% if request.GET.state == 'west_bengal' %}selected{% endif %}>West Bengal</option>
+                <option value="bihar" {% if request.GET.state == 'bihar' %}selected{% endif %}>Bihar</option>
+                <option value="punjab" {% if request.GET.state == 'punjab' %}selected{% endif %}>Punjab</option>
+                <option value="rajasthan" {% if request.GET.state == 'rajasthan' %}selected{% endif %}>Rajasthan</option>
+                <option value="assam" {% if request.GET.state == 'assam' %}selected{% endif %}>Assam</option>
+            </select>
+            
+            <!-- City Filter -->
+            <select name="city" class="filter-dropdown" onchange="document.getElementById('filter-form').submit()">
+                <option value="">🏙️ All Cities</option>
+                <option value="mumbai" {% if request.GET.city == 'mumbai' %}selected{% endif %}>Mumbai</option>
+                <option value="delhi" {% if request.GET.city == 'delhi' %}selected{% endif %}>Delhi</option>
+                <option value="bangalore" {% if request.GET.city == 'bangalore' %}selected{% endif %}>Bangalore</option>
+                <option value="hyderabad" {% if request.GET.city == 'hyderabad' %}selected{% endif %}>Hyderabad</option>
+                <option value="chennai" {% if request.GET.city == 'chennai' %}selected{% endif %}>Chennai</option>
+                <option value="kolkata" {% if request.GET.city == 'kolkata' %}selected{% endif %}>Kolkata</option>
+                <option value="pune" {% if request.GET.city == 'pune' %}selected{% endif %}>Pune</option>
+                <option value="jaipur" {% if request.GET.city == 'jaipur' %}selected{% endif %}>Jaipur</option>
+                <option value="lucknow" {% if request.GET.city == 'lucknow' %}selected{% endif %}>Lucknow</option>
+                <option value="ahmedabad" {% if request.GET.city == 'ahmedabad' %}selected{% endif %}>Ahmedabad</option>
+            </select>
+            
+            <!-- Preserve other filters -->
+            {% if request.GET.q %}
+                <input type="hidden" name="q" value="{{ request.GET.q }}">
+            {% endif %}
         </form>
     </div>
 
